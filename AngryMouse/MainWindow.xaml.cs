@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gma.System.MouseKeyHook;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AngryMouse
 {
@@ -20,9 +9,21 @@ namespace AngryMouse
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private IKeyboardMouseEvents m_GlobalHook;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            m_GlobalHook = Hook.GlobalEvents();
+
+            m_GlobalHook.MouseMoveExt += OnMouseMove;
+        }
+
+        private void OnMouseMove(object sender, MouseEventExtArgs e)
+        {
+            coordinates.Content = e.X + "," + e.Y;
         }
     }
 }
