@@ -13,9 +13,14 @@ namespace AngryMouse.Mouse
         /// </summary>
         public readonly bool IsShaking;
 
-        public MouseShakeArgs(bool shaking)
+        /// <summary>
+        /// The this thing occured.
+        /// </summary>
+        public readonly int Timestamp;
+        public MouseShakeArgs(bool shaking, int timestamp)
         {
             IsShaking = shaking;
+            Timestamp = timestamp;
         }
     }
 }

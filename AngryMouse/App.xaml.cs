@@ -66,7 +66,7 @@ namespace AngryMouse
         private void OnMouseShake(object sender, MouseShakeArgs e)
         {
             OverlayWindow overlayWindow = (OverlayWindow)MainWindow;
-            overlayWindow.SetMouseShake(e.IsShaking);
+            overlayWindow.SetMouseShake(e.IsShaking, e.Timestamp);
         }
     }
 }

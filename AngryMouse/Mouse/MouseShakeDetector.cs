@@ -7,7 +7,7 @@ namespace AngryMouse.Mouse
     /// <summary>
     /// Detects mouse shaking using the global mouse hook.
     /// </summary>
-    class MouseShakeDetector : IDisposable
+    public class MouseShakeDetector : IDisposable
     {
         /// <summary>
         /// Minimum milliseconds between recording a mouse event.
@@ -96,7 +96,7 @@ namespace AngryMouse.Mouse
                 if (this.shaking != shaking)
                 {
                     this.shaking = shaking;
-                    MouseShakeArgs args = new MouseShakeArgs(shaking);
+                    MouseShakeArgs args = new MouseShakeArgs(shaking, e.Timestamp);
                     MouseShake?.Invoke(this, args);
                 }
             }

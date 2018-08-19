@@ -1,4 +1,5 @@
-﻿using AngryMouse.Util;
+﻿using AngryMouse.Animation;
+using AngryMouse.Util;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Windows;
@@ -14,6 +15,16 @@ namespace AngryMouse
     public partial class OverlayWindow : Window
     {
         /// <summary>
+        /// Time of the animation if the scaling goes from 0 to Max or vice versa.
+        /// </summary>
+        private const int MaxAnimationLength = 200;
+
+        /// <summary>
+        /// Maximum cursor size.
+        /// </summary>
+        private const double MaxScale = 0.3;
+
+        /// <summary>
         /// We also subscribe to mouse move events so we know where to draw.
         /// </summary>
         private IKeyboardMouseEvents mouseEvents;
@@ -27,8 +38,8 @@ namespace AngryMouse
         /// Scales the cursor.
         /// </summary>
         private ScaleTransform cursorScale = new ScaleTransform {
-            ScaleX = 0.3,
-            ScaleY = 0.3
+            ScaleX = 0,
+            ScaleY = 0
         };
 
         // TODO temporary, get the resolution from System.Windows.Forms.Screens
@@ -39,6 +50,26 @@ namespace AngryMouse
         /// Whether to show the big boi or not.
         /// </summary>
         private bool shaking = false;
+
+        /// <summary>
+        /// The start of the animation
+        /// </summary>
+        private int animationStart = 0;
+
+        /// <summary>
+        /// The current scale of the cursor. Stored so we can start a new animation from the middle scale if needed.
+        /// </summary>
+        private double currentScale = 0;
+
+        /// <summary>
+        /// The scale to start the animation from.
+        /// </summary>
+        private double scaleAnimStart = 0;
+
+        /// <summary>
+        /// The scale to end the animation at.
+        /// </summary>
+        private double scaleAnimEnd = MaxScale;
 
         /// <summary>
         /// Main constructor.
@@ -102,6 +133,35 @@ namespace AngryMouse
             cursorTranslate.Y = e.Y;
             cursorScale.CenterX = e.X;
             cursorScale.CenterY = e.Y;
+
+            if (e.Timestamp - animationStart > MaxAnimationLength)
+            {
+                if (shaking)
+                {
+                    cursorScale.ScaleX = cursorScale.ScaleY = MaxScale;
+                    BigCursor.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    cursorScale.ScaleX = cursorScale.ScaleY = 0;
+                    BigCursor.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                double scale = CalculateScale(e.Timestamp);
+
+                if (scale < 0 || scale > MaxScale)
+                {
+                    // This can happen when this function is called before SetMouseShake
+                    // Just ignore it end everything will be fine ¯\_(ツ)_/¯
+                    return;
+                }
+
+                currentScale = scale;
+                cursorScale.ScaleX = cursorScale.ScaleY = scale;
+                BigCursor.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -109,14 +169,36 @@ namespace AngryMouse
         /// of the mouse.
         /// </summary>
         /// <param name="shaking">Whether the mouse is shaking or not.</param>
-        public void SetMouseShake(bool shaking)
+        /// <param name="timestamp">The timestamp the shake change occured at.</param>
+        public void SetMouseShake(bool shaking, int timestamp)
         {
             if (this.shaking != shaking)
             {
                 this.shaking = shaking;
 
-                BigCursor.Visibility = shaking ? Visibility.Visible : Visibility.Hidden;
+                animationStart = timestamp;
+
+                scaleAnimStart = currentScale;
+                scaleAnimEnd = shaking ? MaxScale : 0;
             }
+        }
+
+        /// <summary>
+        /// Calculate the current scale of the cursor.
+        /// </summary>
+        /// <param name="timestamp">The timestamp of the frame the calculate for.</param>
+        /// <returns></returns>
+        private double CalculateScale(int timestamp)
+        {
+            double animLength = Math.Abs(scaleAnimEnd - scaleAnimStart) / MaxScale * MaxAnimationLength;
+
+            int elapsed = timestamp - animationStart;
+
+            double t = elapsed / animLength;
+
+            double tEase = Easing.CubicInOut(t);
+
+            return (scaleAnimEnd - scaleAnimStart) * tEase + scaleAnimStart;
         }
     }
 }

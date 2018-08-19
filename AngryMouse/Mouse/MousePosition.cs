@@ -6,7 +6,7 @@ namespace AngryMouse.Mouse
     /// <summary>
     /// Represents a position of the cursor including the timestamp.
     /// </summary>
-    class MousePosition
+    public class MousePosition
     {
         /// <summary>
         /// The position
