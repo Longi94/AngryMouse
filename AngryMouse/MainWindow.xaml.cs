@@ -1,6 +1,6 @@
-﻿using Gma.System.MouseKeyHook;
+﻿using AngryMouse.Mouse;
+using Gma.System.MouseKeyHook;
 using System.Windows;
-using System.Windows.Input;
 
 namespace AngryMouse
 {
@@ -10,20 +10,27 @@ namespace AngryMouse
     public partial class MainWindow : Window
     {
 
-        private IKeyboardMouseEvents m_GlobalHook;
+        private MouseShakeDetector detector;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_GlobalHook = Hook.GlobalEvents();
-
-            m_GlobalHook.MouseMoveExt += OnMouseMove;
+            detector = new MouseShakeDetector();
+            detector.MouseMove += OnMouseMove;
+            detector.MouseShake += OnMouseShake;
         }
 
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
             coordinates.Content = e.X + "," + e.Y;
         }
+
+        private void OnMouseShake(object sender, MouseShakeArgs e)
+        {
+            isShaking.Content = e.IsShaking;
+        }
+
+
     }
 }
