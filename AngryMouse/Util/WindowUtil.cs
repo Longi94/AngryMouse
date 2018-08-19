@@ -17,7 +17,7 @@ namespace AngryMouse.Util
         /// <summary>
         /// Makes the window transparent for the mouse allowing clicks to go through it.
         /// </summary>
-        /// <param name="hwnd"></param>
+        /// <param name="hwnd">Window handle</param>
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);

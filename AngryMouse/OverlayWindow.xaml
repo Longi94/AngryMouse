@@ -18,9 +18,14 @@
         Loaded="Window_Loaded">
     <Grid Name="Root">
         <Viewbox Name="Viewbox">
-            <Canvas Name="OverlayCanvas"/>
+            <Canvas Name="OverlayCanvas">
+                <Path Name="BigCursor" Fill="#FFFFFFFF" Stroke="Black" StrokeThickness="25" Visibility="Hidden">
+                    <Path.Data>
+                        <PathGeometry Figures="M 0,-0.551 V 799 L 201,599 321,890 401,850 276,549 h 275 z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
         </Viewbox>
-
         <Label
             Name="Coordinates"
             Content=""
