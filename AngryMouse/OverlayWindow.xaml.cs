@@ -127,8 +127,6 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
-            Coordinates.Content = e.X + "," + e.Y;
-
             cursorTranslate.X = e.X;
             cursorTranslate.Y = e.Y;
             cursorScale.CenterX = e.X;

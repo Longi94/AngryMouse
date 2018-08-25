@@ -1,8 +1,7 @@
 ﻿<Application x:Class="AngryMouse.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AngryMouse"
-             StartupUri="OverlayWindow.xaml">
+             xmlns:local="clr-namespace:AngryMouse">
     <Application.Resources>
          
     </Application.Resources>

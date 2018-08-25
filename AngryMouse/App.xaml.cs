@@ -1,4 +1,6 @@
 ﻿using AngryMouse.Mouse;
+using AngryMouse.Util;
+using CommandLine;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -14,15 +16,32 @@ namespace AngryMouse
         /// Notification icon in the taskbar.
         /// </summary>
         private NotifyIcon notifyIcon;
-        
+            
         /// <summary>
         /// The thing that detects shakes.
         /// </summary>
         private MouseShakeDetector detector;
 
+        /// <summary>
+        /// The overlay window.
+        /// </summary>
+        private OverlayWindow overlayWindow;
+
+        /// <summary>
+        /// Debug window. Only shown when the -d option is used.
+        /// </summary>
+        private DebugInfoWindow debugInfoWindow;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            bool debug = false;
+            ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(e.Args);
+
+            parserResult.WithParsed((options) => {
+                debug = options.Debug;
+            });
 
             notifyIcon = new NotifyIcon
             {
@@ -34,6 +53,15 @@ namespace AngryMouse
 
             detector = new MouseShakeDetector();
             detector.MouseShake += OnMouseShake;
+
+            if (debug)
+            {
+                debugInfoWindow = new DebugInfoWindow(detector);
+                debugInfoWindow.Show();
+            }
+
+            overlayWindow = new OverlayWindow();
+            overlayWindow.Show();
         }
 
         /// <summary>
@@ -53,7 +81,8 @@ namespace AngryMouse
         /// </summary>
         private void ExitApp()
         {
-            MainWindow.Close();
+            overlayWindow?.Close();
+            debugInfoWindow?.Close();
             notifyIcon.Dispose();
             notifyIcon = null;
         }
@@ -65,7 +94,6 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseShake(object sender, MouseShakeArgs e)
         {
-            OverlayWindow overlayWindow = (OverlayWindow)MainWindow;
             overlayWindow.SetMouseShake(e.IsShaking, e.Timestamp);
         }
     }
