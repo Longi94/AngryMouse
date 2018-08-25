@@ -1,6 +1,8 @@
 ﻿using AngryMouse.Mouse;
+using AngryMouse.Screen;
 using AngryMouse.Util;
 using CommandLine;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -54,13 +56,17 @@ namespace AngryMouse
             detector = new MouseShakeDetector();
             detector.MouseShake += OnMouseShake;
 
+            var screenInfos = GetScreenInfos();
+            // TODO support multiple screens
+            var primaryScreen = screenInfos.Find(info => info.Primary);
+
             if (debug)
             {
-                debugInfoWindow = new DebugInfoWindow(detector);
+                debugInfoWindow = new DebugInfoWindow(detector, screenInfos);
                 debugInfoWindow.Show();
             }
 
-            overlayWindow = new OverlayWindow();
+            overlayWindow = new OverlayWindow(primaryScreen);
             overlayWindow.Show();
         }
 
@@ -95,6 +101,26 @@ namespace AngryMouse
         private void OnMouseShake(object sender, MouseShakeArgs e)
         {
             overlayWindow.SetMouseShake(e.IsShaking, e.Timestamp);
+        }
+
+        private List<ScreenInfo> GetScreenInfos()
+        {
+            List<ScreenInfo> screenInfos = new List<ScreenInfo>();
+
+            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                screenInfos.Add(new ScreenInfo()
+                {
+                    Name = screen.DeviceName,
+                    X = screen.Bounds.X,
+                    Y = screen.Bounds.Y,
+                    Width = screen.Bounds.Width,
+                    Height = screen.Bounds.Height,
+                    Primary = screen.Primary
+                });
+            }
+
+            return screenInfos;
         }
     }
 }

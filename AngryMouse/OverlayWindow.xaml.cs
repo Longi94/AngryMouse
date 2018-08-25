@@ -1,4 +1,5 @@
 ﻿using AngryMouse.Animation;
+using AngryMouse.Screen;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Windows;
@@ -41,9 +42,10 @@ namespace AngryMouse
             ScaleY = 0
         };
 
-        // TODO temporary, get the resolution from System.Windows.Forms.Screens
-        const int screenWidth = 1920;
-        const int screenHeight = 1080;
+        /// <summary>
+        /// The screen this window is open in.
+        /// </summary>
+        private ScreenInfo screen;
 
         /// <summary>
         /// Whether to show the big boi or not.
@@ -73,9 +75,12 @@ namespace AngryMouse
         /// <summary>
         /// Main constructor.
         /// </summary>
-        public OverlayWindow()
+        /// <param name="screen">The window to show the screen in.</param>
+        public OverlayWindow(ScreenInfo screen)
         {
             InitializeComponent();
+
+            this.screen = screen;
 
             mouseEvents = Hook.GlobalEvents();
             mouseEvents.MouseMoveExt += OnMouseMove;
@@ -105,8 +110,8 @@ namespace AngryMouse
 
             BigCursor.RenderTransform = transformGroup;
 
-            OverlayCanvas.Width = screenWidth;
-            OverlayCanvas.Height = screenHeight;
+            OverlayCanvas.Width = screen.Width;
+            OverlayCanvas.Height = screen.Height;
 
             // DPI scaling workaround, Viewbox HACKK
             PresentationSource presentationSource = PresentationSource.FromVisual(this);
@@ -115,8 +120,8 @@ namespace AngryMouse
             double dpiWidthFactor = m.M11;
             double dpiHeightFactor = m.M22;
 
-            Viewbox.Width = screenWidth / dpiWidthFactor;
-            Viewbox.Height = screenHeight / dpiHeightFactor;
+            Viewbox.Width = screen.Width / dpiWidthFactor;
+            Viewbox.Height = screen.Height / dpiHeightFactor;
         }
 
         /// <summary>
@@ -126,10 +131,19 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
-            cursorTranslate.X = e.X;
-            cursorTranslate.Y = e.Y;
-            cursorScale.CenterX = e.X;
-            cursorScale.CenterY = e.Y;
+            if (e.X < screen.X || e.X > screen.X + screen.Width ||
+                e.Y < screen.Y || e.Y > screen.Y + screen.Height)
+            {
+                // mouse is outside of this window
+                cursorScale.ScaleX = cursorScale.ScaleY = 0;
+                BigCursor.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            cursorTranslate.X = e.X - screen.X;
+            cursorTranslate.Y = e.Y - screen.Y;
+            cursorScale.CenterX = e.X - screen.X;
+            cursorScale.CenterY = e.Y - screen.Y;
 
             if (e.Timestamp - animationStart > MaxAnimationLength)
             {

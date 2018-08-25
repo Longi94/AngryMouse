@@ -76,6 +76,7 @@
     <Compile Include="DebugInfoWindow.xaml.cs">
       <DependentUpon>DebugInfoWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screen\ScreenInfo.cs" />
     <Compile Include="Util\Options.cs" />
     <Compile Include="Util\WindowUtil.cs" />
     <Compile Include="App.xaml.cs">
