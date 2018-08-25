@@ -1,11 +1,10 @@
 ﻿using AngryMouse.Animation;
-using AngryMouse.Util;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
 using System.Windows.Media;
+using static AngryMouse.Util.WindowUtil;
 
 namespace AngryMouse
 {
@@ -88,8 +87,8 @@ namespace AngryMouse
             // Do not capture any mouse events
             // TODO I suspect this is the reason we cannot replace the cursor (hide it) since
             // the cursor draws on top of the big cursor.
-            var hwnd = new WindowInteropHelper(this).Handle;
-            WindowUtil.SetWindowExTransparent(hwnd);
+            // Also hide window from alt-tab menu
+            SetWindowStyles(this, ExtendedWindowStyles.WS_EX_TOOLWINDOW | ExtendedWindowStyles.WS_EX_TRANSPARENT);
         }
 
         /// <summary>

@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace AngryMouse.Util
 {
     class WindowUtil
     {
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int GWL_EXSTYLE = (-20);
+        const int GWL_EXSTYLE = -20;
+
+        [Flags]
+        public enum ExtendedWindowStyles
+        {
+            WS_EX_TRANSPARENT = 0x00000020,
+            WS_EX_TOOLWINDOW = 0x00000080
+        }
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -14,14 +22,12 @@ namespace AngryMouse.Util
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
-        /// <summary>
-        /// Makes the window transparent for the mouse allowing clicks to go through it.
-        /// </summary>
-        /// <param name="hwnd">Window handle</param>
-        public static void SetWindowExTransparent(IntPtr hwnd)
+        public static void SetWindowStyles(Window window, ExtendedWindowStyles styles)
         {
+            var hwnd = new WindowInteropHelper(window).Handle;
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+            extendedStyle |= (int)styles;
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
         }
     }
 }
