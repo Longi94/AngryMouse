@@ -39,6 +39,9 @@ namespace AngryMouse
             ScreenInfos = new ObservableCollection<ScreenInfo>(screenInfos);
 
             ScreensTable.ItemsSource = ScreenInfos;
+
+            VirtualScreen.Content = SystemParameters.VirtualScreenWidth + "x" + SystemParameters.VirtualScreenHeight;
+            VirtualScreenTopLeft.Content = SystemParameters.VirtualScreenLeft + "x" + SystemParameters.VirtualScreenTop;
         }
 
         private void OnMouseShake(object sender, MouseShakeArgs e)

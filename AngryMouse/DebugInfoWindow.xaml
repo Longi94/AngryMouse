@@ -8,10 +8,12 @@
         Title="DebugInfoWindow" Height="450" Width="800">
     <Grid Name="Root">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -21,8 +23,12 @@
         <Label Grid.Column="1" Grid.Row="0" Name="Coordinates" Content="0,0"/>
         <Label Grid.Column="0" Grid.Row="1" Content="Shaking" />
         <Label Grid.Column="1" Grid.Row="1" Name="IsShaking" Content="False"/>
-        <Label Content="Screens" Grid.Row="2" />
-        <DataGrid Name="ScreensTable" Grid.Row="3" Grid.ColumnSpan="2" AutoGenerateColumns="False"
+        <Label Grid.Column="0" Grid.Row="2" Content="Virtual Screen" />
+        <Label Grid.Column="1" Grid.Row="2" Name="VirtualScreen" Content="0x0"/>
+        <Label Grid.Column="0" Grid.Row="3" Content="Top Left" />
+        <Label Grid.Column="1" Grid.Row="3" Name="VirtualScreenTopLeft" Content="0x0"/>
+        <Label Content="Screens" Grid.Row="4" />
+        <DataGrid Name="ScreensTable" Grid.Row="5" Grid.ColumnSpan="2" AutoGenerateColumns="False"
                   IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
