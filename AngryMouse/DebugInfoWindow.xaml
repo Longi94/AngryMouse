@@ -26,10 +26,15 @@
                   IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="X" Binding="{Binding X}" />
-                <DataGridTextColumn Header="Y" Binding="{Binding Y}" />
-                <DataGridTextColumn Header="Width" Binding="{Binding Width}" />
-                <DataGridTextColumn Header="Height" Binding="{Binding Height}" />
+                <DataGridTextColumn Header="BPP" Binding="{Binding BPP}" />
+                <DataGridTextColumn Header="BoundX" Binding="{Binding BoundX}" />
+                <DataGridTextColumn Header="BoundY" Binding="{Binding BoundY}" />
+                <DataGridTextColumn Header="BoundWidth" Binding="{Binding BoundWidth}" />
+                <DataGridTextColumn Header="BoundHeight" Binding="{Binding BoundHeight}" />
+                <DataGridTextColumn Header="WorkX" Binding="{Binding WorkX}" />
+                <DataGridTextColumn Header="WorkY" Binding="{Binding WorkY}" />
+                <DataGridTextColumn Header="WorkWidth" Binding="{Binding WorkWidth}" />
+                <DataGridTextColumn Header="WorkHeight" Binding="{Binding WorkHeight}" />
                 <DataGridTextColumn Header="Primary" Binding="{Binding Primary}" />
             </DataGrid.Columns>
         </DataGrid>

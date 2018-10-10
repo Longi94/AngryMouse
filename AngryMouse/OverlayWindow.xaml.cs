@@ -110,8 +110,8 @@ namespace AngryMouse
 
             BigCursor.RenderTransform = transformGroup;
 
-            OverlayCanvas.Width = screen.Width;
-            OverlayCanvas.Height = screen.Height;
+            OverlayCanvas.Width = screen.BoundWidth;
+            OverlayCanvas.Height = screen.BoundHeight;
 
             // DPI scaling workaround, Viewbox HACKK
             PresentationSource presentationSource = PresentationSource.FromVisual(this);
@@ -120,8 +120,8 @@ namespace AngryMouse
             double dpiWidthFactor = m.M11;
             double dpiHeightFactor = m.M22;
 
-            Viewbox.Width = screen.Width / dpiWidthFactor;
-            Viewbox.Height = screen.Height / dpiHeightFactor;
+            Viewbox.Width = screen.BoundWidth / dpiWidthFactor;
+            Viewbox.Height = screen.BoundHeight / dpiHeightFactor;
         }
 
         /// <summary>
@@ -131,8 +131,8 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
-            if (e.X < screen.X || e.X > screen.X + screen.Width ||
-                e.Y < screen.Y || e.Y > screen.Y + screen.Height)
+            if (e.X < screen.BoundX || e.X > screen.BoundX + screen.BoundWidth ||
+                e.Y < screen.BoundY || e.Y > screen.BoundY + screen.BoundHeight)
             {
                 // mouse is outside of this window
                 cursorScale.ScaleX = cursorScale.ScaleY = 0;
@@ -140,10 +140,10 @@ namespace AngryMouse
                 return;
             }
 
-            cursorTranslate.X = e.X - screen.X;
-            cursorTranslate.Y = e.Y - screen.Y;
-            cursorScale.CenterX = e.X - screen.X;
-            cursorScale.CenterY = e.Y - screen.Y;
+            cursorTranslate.X = e.X - screen.BoundX;
+            cursorTranslate.Y = e.Y - screen.BoundY;
+            cursorScale.CenterX = e.X - screen.BoundX;
+            cursorScale.CenterY = e.Y - screen.BoundY;
 
             if (e.Timestamp - animationStart > MaxAnimationLength)
             {

@@ -23,58 +23,128 @@ namespace AngryMouse.Screen
             }
         }
 
-        private int x;
+        private int bpp;
+        /// <summary>
+        /// Bits per pixel.
+        /// </summary>
+        public int BPP
+        {
+            get => bpp;
+            set
+            {
+                bpp = value;
+                RaiseProperChanged();
+            }
+        }
+
+        private int boundX;
         /// <summary>
         /// X position of the screen.
         /// </summary>
-        public int X
+        public int BoundX
         {
-            get => x;
+            get => boundX;
             set
             {
-                x = value;
+                boundX = value;
                 RaiseProperChanged();
             }
         }
 
-        private int y;
+        private int boundY;
         /// <summary>
         /// Y position of the screen.
         /// </summary>
-        public int Y
+        public int BoundY
         {
-            get => y;
+            get => boundY;
             set
             {
-                y = value;
+                boundY = value;
                 RaiseProperChanged();
             }
         }
 
-        private int width;
+        private int boundWidth;
         /// <summary>
         /// Width of the screen.
         /// </summary>
-        public int Width
+        public int BoundWidth
         {
-            get => width;
+            get => boundWidth;
             set
             {
-                width = value;
+                boundWidth = value;
                 RaiseProperChanged();
             }
         }
 
-        private int height;
+        private int boundHeight;
         /// <summary>
         /// Height of the screen.
         /// </summary>
-        public int Height
+        public int BoundHeight
         {
-            get => height;
+            get => boundHeight;
             set
             {
-                height = value;
+                boundHeight = value;
+                RaiseProperChanged();
+            }
+        }
+
+        private int workX;
+        /// <summary>
+        /// X position of the working area.
+        /// </summary>
+        public int WorkX
+        {
+            get => workX;
+            set
+            {
+                workX = value;
+                RaiseProperChanged();
+            }
+        }
+
+        private int workY;
+        /// <summary>
+        /// Y position of the working area.
+        /// </summary>
+        public int WorkY
+        {
+            get => workY;
+            set
+            {
+                workY = value;
+                RaiseProperChanged();
+            }
+        }
+
+        private int workWidth;
+        /// <summary>
+        /// Width of the working area.
+        /// </summary>
+        public int WorkWidth
+        {
+            get => workWidth;
+            set
+            {
+                workWidth = value;
+                RaiseProperChanged();
+            }
+        }
+
+        private int workHeight;
+        /// <summary>
+        /// Height of the working area.
+        /// </summary>
+        public int WorkHeight
+        {
+            get => workHeight;
+            set
+            {
+                workHeight = value;
                 RaiseProperChanged();
             }
         }

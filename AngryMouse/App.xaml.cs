@@ -112,11 +112,16 @@ namespace AngryMouse
                 screenInfos.Add(new ScreenInfo()
                 {
                     Name = screen.DeviceName,
-                    X = screen.Bounds.X,
-                    Y = screen.Bounds.Y,
-                    Width = screen.Bounds.Width,
-                    Height = screen.Bounds.Height,
-                    Primary = screen.Primary
+                    BoundX = screen.Bounds.X,
+                    BoundY = screen.Bounds.Y,
+                    BoundWidth = screen.Bounds.Width,
+                    BoundHeight = screen.Bounds.Height,
+                    WorkX = screen.WorkingArea.X,
+                    WorkY = screen.WorkingArea.Y,
+                    WorkWidth = screen.WorkingArea.Width,
+                    WorkHeight = screen.WorkingArea.Height,
+                    Primary = screen.Primary,
+                    BPP = screen.BitsPerPixel
                 });
             }
 
