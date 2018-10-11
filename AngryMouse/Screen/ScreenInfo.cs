@@ -3,162 +3,172 @@ using System.Runtime.CompilerServices;
 
 namespace AngryMouse.Screen
 {
-
     /// <summary>
     /// Class representing a screen.
     /// </summary>
     public class ScreenInfo : INotifyPropertyChanged
     {
-        private string name;
+        private string _name;
+
         /// <summary>
         /// The name of the screen.
         /// </summary>
         public string Name
         {
-            get => name;
+            get => _name;
             set
             {
-                name = value;
+                _name = value;
                 RaiseProperChanged();
             }
         }
 
-        private int bpp;
+        private int _bpp;
+
         /// <summary>
         /// Bits per pixel.
         /// </summary>
-        public int BPP
+        public int Bpp
         {
-            get => bpp;
+            get => _bpp;
             set
             {
-                bpp = value;
+                _bpp = value;
                 RaiseProperChanged();
             }
         }
 
-        private int boundX;
+        private int _boundX;
+
         /// <summary>
         /// X position of the screen.
         /// </summary>
         public int BoundX
         {
-            get => boundX;
+            get => _boundX;
             set
             {
-                boundX = value;
+                _boundX = value;
                 RaiseProperChanged();
             }
         }
 
-        private int boundY;
+        private int _boundY;
+
         /// <summary>
         /// Y position of the screen.
         /// </summary>
         public int BoundY
         {
-            get => boundY;
+            get => _boundY;
             set
             {
-                boundY = value;
+                _boundY = value;
                 RaiseProperChanged();
             }
         }
 
-        private int boundWidth;
+        private int _boundWidth;
+
         /// <summary>
         /// Width of the screen.
         /// </summary>
         public int BoundWidth
         {
-            get => boundWidth;
+            get => _boundWidth;
             set
             {
-                boundWidth = value;
+                _boundWidth = value;
                 RaiseProperChanged();
             }
         }
 
-        private int boundHeight;
+        private int _boundHeight;
+
         /// <summary>
         /// Height of the screen.
         /// </summary>
         public int BoundHeight
         {
-            get => boundHeight;
+            get => _boundHeight;
             set
             {
-                boundHeight = value;
+                _boundHeight = value;
                 RaiseProperChanged();
             }
         }
 
-        private int workX;
+        private int _workX;
+
         /// <summary>
         /// X position of the working area.
         /// </summary>
         public int WorkX
         {
-            get => workX;
+            get => _workX;
             set
             {
-                workX = value;
+                _workX = value;
                 RaiseProperChanged();
             }
         }
 
-        private int workY;
+        private int _workY;
+
         /// <summary>
         /// Y position of the working area.
         /// </summary>
         public int WorkY
         {
-            get => workY;
+            get => _workY;
             set
             {
-                workY = value;
+                _workY = value;
                 RaiseProperChanged();
             }
         }
 
-        private int workWidth;
+        private int _workWidth;
+
         /// <summary>
         /// Width of the working area.
         /// </summary>
         public int WorkWidth
         {
-            get => workWidth;
+            get => _workWidth;
             set
             {
-                workWidth = value;
+                _workWidth = value;
                 RaiseProperChanged();
             }
         }
 
-        private int workHeight;
+        private int _workHeight;
+
         /// <summary>
         /// Height of the working area.
         /// </summary>
         public int WorkHeight
         {
-            get => workHeight;
+            get => _workHeight;
             set
             {
-                workHeight = value;
+                _workHeight = value;
                 RaiseProperChanged();
             }
         }
 
-        private bool primary;
+        private bool _primary;
+
         /// <summary>
         /// Indicates that this is the primary screen.
         /// </summary>
         public bool Primary
         {
-            get => primary;
+            get => _primary;
             set
             {
-                primary = value;
+                _primary = value;
                 RaiseProperChanged();
             }
         }
@@ -171,7 +181,6 @@ namespace AngryMouse.Screen
         /// <param name="caller"></param>
         private void RaiseProperChanged([CallerMemberName] string caller = "")
         {
-
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
         }
     }

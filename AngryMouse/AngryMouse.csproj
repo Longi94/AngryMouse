@@ -140,8 +140,6 @@
   <ItemGroup>
     <Resource Include="Resources\Cursor.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

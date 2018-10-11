@@ -1,6 +1,5 @@
 ﻿using AngryMouse.Animation;
 using AngryMouse.Screen;
-using AngryMouse.Util;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Text;
@@ -14,27 +13,23 @@ namespace AngryMouse
     /// <summary>
     /// Interaction logic for OverlayWindow.xaml
     /// </summary>
-    public partial class OverlayWindow : Window
+    public partial class OverlayWindow
     {
         /// <summary>
         /// Show debug info
         /// </summary>
-        private bool debug;
-
-        /// <summary>
-        /// We also subscribe to mouse move events so we know where to draw.
-        /// </summary>
-        private IKeyboardMouseEvents mouseEvents;
+        private readonly bool _debug;
 
         /// <summary>
         /// Moves the cursor around the canvas.
         /// </summary>
-        private TranslateTransform cursorTranslate = new TranslateTransform();
+        private readonly TranslateTransform _cursorTranslate = new TranslateTransform();
 
         /// <summary>
         /// Scales the cursor.
         /// </summary>
-        private ScaleTransform cursorScale = new ScaleTransform {
+        private readonly ScaleTransform _cursorScale = new ScaleTransform
+        {
             ScaleX = 0,
             ScaleY = 0
         };
@@ -42,32 +37,31 @@ namespace AngryMouse
         /// <summary>
         /// The screen this window is open in.
         /// </summary>
-        private ScreenInfo screen;
-
-        /// <summary>
-        /// Whether to show the big boi or not.
-        /// </summary>
-        private bool shaking = false;
+        private readonly ScreenInfo _screen;
 
         /// <summary>
         /// DPI scale info of the current screen.
         /// </summary>
-        private DpiScale dpiInfo;
+        private DpiScale _dpiInfo;
 
+        /// <summary>
+        /// Animates mouse growing and shrinking
+        /// </summary>
         private MouseAnimator _mouseAnimator;
 
         /// <summary>
         /// Main constructor.
         /// </summary>
         /// <param name="screen">The window to show the screen in.</param>
+        /// <param name="debug">Show debug information on screens</param>
         public OverlayWindow(ScreenInfo screen, bool debug = false)
         {
             InitializeComponent();
 
-            this.debug = debug;
-            this.screen = screen;
+            _debug = debug;
+            _screen = screen;
 
-            mouseEvents = Hook.GlobalEvents();
+            var mouseEvents = Hook.GlobalEvents();
             mouseEvents.MouseMoveExt += OnMouseMove;
         }
 
@@ -88,7 +82,7 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!debug)
+            if (!_debug)
             {
                 Root.Children.Remove(DebugInfo);
                 OverlayCanvas.Children.Remove(MousePosDebug);
@@ -96,31 +90,31 @@ namespace AngryMouse
 
             TransformGroup transformGroup = new TransformGroup();
 
-            transformGroup.Children.Add(cursorTranslate);
-            transformGroup.Children.Add(cursorScale);
+            transformGroup.Children.Add(_cursorTranslate);
+            transformGroup.Children.Add(_cursorScale);
 
             BigCursor.RenderTransform = transformGroup;
 
             // Open this window maximized on the appropriate screen
-            Top = screen.BoundY;
-            Left = screen.BoundX;
+            Top = _screen.BoundY;
+            Left = _screen.BoundX;
             WindowState = WindowState.Maximized;
 
-            OverlayCanvas.Width = screen.BoundWidth;
-            OverlayCanvas.Height = screen.BoundHeight;
+            OverlayCanvas.Width = _screen.BoundWidth;
+            OverlayCanvas.Height = _screen.BoundHeight;
 
-            dpiInfo = VisualTreeHelper.GetDpi(this);
+            _dpiInfo = VisualTreeHelper.GetDpi(this);
 
-            Viewbox.Width = screen.BoundWidth / dpiInfo.PixelsPerDip;
-            Viewbox.Height = screen.BoundHeight / dpiInfo.PixelsPerDip;
+            Viewbox.Width = _screen.BoundWidth / _dpiInfo.PixelsPerDip;
+            Viewbox.Height = _screen.BoundHeight / _dpiInfo.PixelsPerDip;
 
-            if (debug)
+            if (_debug)
             {
-                MousePosDebug.Width = MousePosDebug.Width * dpiInfo.PixelsPerDip;
-                MousePosDebug.Height = MousePosDebug.Height * dpiInfo.PixelsPerDip;
+                MousePosDebug.Width = MousePosDebug.Width * _dpiInfo.PixelsPerDip;
+                MousePosDebug.Height = MousePosDebug.Height * _dpiInfo.PixelsPerDip;
             }
 
-            _mouseAnimator = new MouseAnimator(cursorScale, BigCursor, dpiInfo);
+            _mouseAnimator = new MouseAnimator(_cursorScale, BigCursor, _dpiInfo);
         }
 
         /// <summary>
@@ -130,22 +124,22 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
-            var mouseInScreen = e.X >= screen.BoundX && e.X <= screen.BoundX + screen.BoundWidth && 
-                                e.Y >= screen.BoundY && e.Y <= screen.BoundY + screen.BoundHeight;
-            if (debug)
+            var mouseInScreen = e.X >= _screen.BoundX && e.X <= _screen.BoundX + _screen.BoundWidth &&
+                                e.Y >= _screen.BoundY && e.Y <= _screen.BoundY + _screen.BoundHeight;
+            if (_debug)
             {
                 var infoBuilder = new StringBuilder();
                 infoBuilder
-                    .AppendFormat("Name {0}", screen.Name).AppendLine()
-                    .AppendFormat("Primary {0}", screen.Primary).AppendLine()
-                    .AppendFormat("PixelsPerDip {0}", dpiInfo.PixelsPerDip).AppendLine()
+                    .AppendFormat("Name {0}", _screen.Name).AppendLine()
+                    .AppendFormat("Primary {0}", _screen.Primary).AppendLine()
+                    .AppendFormat("PixelsPerDip {0}", _dpiInfo.PixelsPerDip).AppendLine()
                     .AppendFormat("Mouse {0},{1}", e.X, e.Y).AppendLine()
                     .AppendFormat("InScreen {0}", mouseInScreen).AppendLine()
-                    .AppendFormat("Draw {0},{1}", e.X - screen.BoundX, e.Y - screen.BoundY);
+                    .AppendFormat("Draw {0},{1}", e.X - _screen.BoundX, e.Y - _screen.BoundY);
                 DebugInfo.Content = infoBuilder.ToString();
 
-                Canvas.SetTop(MousePosDebug, e.Y - screen.BoundY);
-                Canvas.SetLeft(MousePosDebug, e.X - screen.BoundX);
+                Canvas.SetTop(MousePosDebug, e.Y - _screen.BoundY);
+                Canvas.SetLeft(MousePosDebug, e.X - _screen.BoundX);
             }
 
             _mouseAnimator.MouseInScreen = mouseInScreen;
@@ -154,10 +148,10 @@ namespace AngryMouse
                 return;
             }
 
-            cursorTranslate.X = e.X - screen.BoundX;
-            cursorTranslate.Y = e.Y - screen.BoundY;
-            cursorScale.CenterX = e.X - screen.BoundX;
-            cursorScale.CenterY = e.Y - screen.BoundY;
+            _cursorTranslate.X = e.X - _screen.BoundX;
+            _cursorTranslate.Y = e.Y - _screen.BoundY;
+            _cursorScale.CenterX = e.X - _screen.BoundX;
+            _cursorScale.CenterY = e.Y - _screen.BoundY;
         }
 
         /// <summary>

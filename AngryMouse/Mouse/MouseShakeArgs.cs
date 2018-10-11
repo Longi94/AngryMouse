@@ -2,7 +2,6 @@
 
 namespace AngryMouse.Mouse
 {
-
     /// <summary>
     /// Arguments for the shaking mouse event.
     /// </summary>
@@ -17,6 +16,7 @@ namespace AngryMouse.Mouse
         /// The this thing occured.
         /// </summary>
         public readonly DateTime Timestamp;
+
         public MouseShakeArgs(bool shaking, DateTime timestamp)
         {
             IsShaking = shaking;

@@ -14,26 +14,14 @@ namespace AngryMouse.Mouse
         public readonly Vector2 Position;
 
         /// <summary>
-        /// X positon of the mouse.
+        /// X position of the mouse.
         /// </summary>
-        public float X
-        {
-            get
-            {
-                return Position.X;
-            }
-        }
+        public float X => Position.X;
 
         /// <summary>
         /// Y position of the mouse.
         /// </summary>
-        public float Y
-        {
-            get
-            {
-                return Position.Y;
-            }
-        }
+        public float Y => Position.Y;
 
         /// <summary>
         /// The timestamp when the mouse was in this position.

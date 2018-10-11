@@ -34,22 +34,22 @@ namespace AngryMouse.Mouse
         /// <summary>
         /// The hook into mouse events
         /// </summary>
-        private readonly IKeyboardMouseEvents mouseEvents;
+        private readonly IKeyboardMouseEvents _mouseEvents;
 
         /// <summary>
         /// The last time we received a mouse event.
         /// </summary>
-        private DateTime lastMouseEvent = DateTime.MinValue;
+        private DateTime _lastMouseEvent = DateTime.MinValue;
 
         /// <summary>
         /// Stores the recorded mouse positions.
         /// </summary>
-        private LinkedList<MousePosition> mousePositions = new LinkedList<MousePosition>();
+        private readonly LinkedList<MousePosition> _mousePositions = new LinkedList<MousePosition>();
 
         /// <summary>
         /// Indicates whether the mouse is currently shaking or not.
         /// </summary>
-        private bool shaking = false;
+        private bool _shaking;
 
         /// <summary>
         /// Handler for mouse shaking events.
@@ -71,9 +71,9 @@ namespace AngryMouse.Mouse
         /// </summary>
         public MouseShakeDetector()
         {
-            mouseEvents = Hook.GlobalEvents();
+            _mouseEvents = Hook.GlobalEvents();
 
-            mouseEvents.MouseMoveExt += OnMouseMove;
+            _mouseEvents.MouseMoveExt += OnMouseMove;
 
             _timer.Interval = 100;
             _timer.Elapsed += Timer_Tick;
@@ -88,20 +88,20 @@ namespace AngryMouse.Mouse
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
             var currentTime = DateTime.Now;
-            if (currentTime.AddMilliseconds(-MouseEventRate) > lastMouseEvent)
+            if (currentTime.AddMilliseconds(-MouseEventRate) > _lastMouseEvent)
             {
                 MouseMove?.Invoke(this, e);
 
-                lastMouseEvent = currentTime;
+                _lastMouseEvent = currentTime;
 
-                while (mousePositions.Count > 0 &&
-                    e.Timestamp - TrackingInterval > mousePositions.Last.Value.Timestamp)
+                while (_mousePositions.Count > 0 &&
+                       e.Timestamp - TrackingInterval > _mousePositions.Last.Value.Timestamp)
                 {
                     // Remove old positions
-                    mousePositions.RemoveLast();
+                    _mousePositions.RemoveLast();
                 }
 
-                mousePositions.AddFirst(e);
+                _mousePositions.AddFirst(e);
 
                 SetShaking(IsShaking());
             }
@@ -114,7 +114,7 @@ namespace AngryMouse.Mouse
         private bool IsShaking()
         {
             // At least 10 positions needed
-            if (mousePositions.Count < 10)
+            if (_mousePositions.Count < 10)
             {
                 return false;
             }
@@ -122,14 +122,14 @@ namespace AngryMouse.Mouse
             double speedSum = 0;
             int sharpTurns = 0;
 
-            LinkedListNode<MousePosition> current = mousePositions.First;
+            LinkedListNode<MousePosition> current = _mousePositions.First;
 
-            // Loop throught the linked list, skipping the last element
+            // Loop thought the linked list, skipping the last element
             while (current.Next != null)
             {
                 MousePosition p1 = current.Value;
                 MousePosition p2 = current.Next.Value;
-                MousePosition p0 = current.Previous == null ? null : current.Previous.Value;
+                MousePosition p0 = current.Previous?.Value;
 
                 // Distance between the current and the next point.
                 double d = Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
@@ -149,16 +149,16 @@ namespace AngryMouse.Mouse
             }
 
             // Average mouse speed
-            double avgSpeed = speedSum / (mousePositions.Count - 1);
+            double avgSpeed = speedSum / (_mousePositions.Count - 1);
 
             return avgSpeed >= MinimumSpeed && sharpTurns >= MinimumTurns;
         }
 
         private void SetShaking(bool shaking)
         {
-            if (this.shaking != shaking)
+            if (_shaking != shaking)
             {
-                this.shaking = shaking;
+                _shaking = shaking;
                 MouseShakeArgs args = new MouseShakeArgs(shaking, DateTime.Now);
                 MouseShake?.Invoke(this, args);
             }
@@ -166,18 +166,15 @@ namespace AngryMouse.Mouse
 
         private void Timer_Tick(object sender, ElapsedEventArgs e)
         {
-            if (shaking && DateTime.Now.AddMilliseconds(-500) > lastMouseEvent)
+            if (_shaking && DateTime.Now.AddMilliseconds(-500) > _lastMouseEvent)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SetShaking(false);
-                });
+                Application.Current.Dispatcher.Invoke(() => { SetShaking(false); });
             }
         }
 
         public void Dispose()
         {
-            mouseEvents.MouseMoveExt -= OnMouseMove;
+            _mouseEvents.MouseMoveExt -= OnMouseMove;
             _timer.Enabled = false;
             _timer.Dispose();
         }

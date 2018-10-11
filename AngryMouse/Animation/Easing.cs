@@ -5,7 +5,6 @@
     /// </summary>
     public class Easing
     {
-
         /// <summary>
         /// Cubic in-out easing.
         /// </summary>

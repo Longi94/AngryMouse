@@ -26,7 +26,7 @@ namespace AngryMouse.Util
         {
             var hwnd = new WindowInteropHelper(window).Handle;
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            extendedStyle |= (int)styles;
+            extendedStyle |= (int) styles;
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
         }
     }

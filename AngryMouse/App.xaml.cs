@@ -11,49 +11,47 @@ namespace AngryMouse
     /// <summary>
     /// Main app
     /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class App
     {
         /// <summary>
         /// Debug mode
         /// </summary>
-        private bool debug = false;
+        private bool _debug;
 
         /// <summary>
-        /// Notification icon in the taskbar.
+        /// Notification icon in the task bar.
         /// </summary>
-        private NotifyIcon notifyIcon;
-            
+        private NotifyIcon _notifyIcon;
+
         /// <summary>
         /// The thing that detects shakes.
         /// </summary>
-        private MouseShakeDetector detector;
+        private MouseShakeDetector _detector;
 
         /// <summary>
         /// Debug window. Only shown when the -d option is used.
         /// </summary>
-        private DebugInfoWindow debugInfoWindow;
+        private DebugInfoWindow _debugInfoWindow;
 
         /// <summary>
         /// The list of screens.
         /// </summary>
-        private List<ScreenInfo> screenInfos;
+        private List<ScreenInfo> _screenInfos;
 
         /// <summary>
         /// The list of overlay windows that draw the big mouse.
         /// </summary>
-        private List<OverlayWindow> overlayWindows = new List<OverlayWindow>();
+        private readonly List<OverlayWindow> _overlayWindows = new List<OverlayWindow>();
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            
+
             ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(e.Args);
 
-            parserResult.WithParsed((options) => {
-                debug = options.Debug;
-            });
+            parserResult.WithParsed((options) => { _debug = options.Debug; });
 
-            notifyIcon = new NotifyIcon
+            _notifyIcon = new NotifyIcon
             {
                 Visible = true,
                 Icon = AngryMouse.Properties.Resources.Cursor
@@ -61,24 +59,24 @@ namespace AngryMouse
 
             CreateContextMenu();
 
-            detector = new MouseShakeDetector();
-            detector.MouseShake += OnMouseShake;
+            _detector = new MouseShakeDetector();
+            _detector.MouseShake += OnMouseShake;
 
-            screenInfos = GetScreenInfos();
+            _screenInfos = GetScreenInfos();
 
-            if (debug)
+            if (_debug)
             {
-                debugInfoWindow = new DebugInfoWindow(detector, screenInfos);
-                debugInfoWindow.Show();
+                _debugInfoWindow = new DebugInfoWindow(_detector, _screenInfos);
+                _debugInfoWindow.Show();
             }
 
             // Create and load windows on the secondary screens.
-            foreach (var screen in screenInfos)
+            foreach (var screen in _screenInfos)
             {
-                var window = new OverlayWindow(screen, debug);
+                var window = new OverlayWindow(screen, _debug);
                 window.Show();
 
-                overlayWindows.Add(window);
+                _overlayWindows.Add(window);
             }
         }
 
@@ -91,7 +89,7 @@ namespace AngryMouse
 
             menu.Items.Add("Exit").Click += (s, e) => ExitApp();
 
-            notifyIcon.ContextMenuStrip = menu;
+            _notifyIcon.ContextMenuStrip = menu;
         }
 
         /// <summary>
@@ -99,10 +97,10 @@ namespace AngryMouse
         /// </summary>
         private void ExitApp()
         {
-            overlayWindows.ForEach(window => window.Close());
-            debugInfoWindow?.Close();
-            notifyIcon.Dispose();
-            notifyIcon = null;
+            _overlayWindows.ForEach(window => window.Close());
+            _debugInfoWindow?.Close();
+            _notifyIcon.Dispose();
+            _notifyIcon = null;
         }
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseShake(object sender, MouseShakeArgs e)
         {
-            overlayWindows.ForEach(window => window.SetMouseShake(e.IsShaking, e.Timestamp));
+            _overlayWindows.ForEach(window => window.SetMouseShake(e.IsShaking, e.Timestamp));
         }
 
         private List<ScreenInfo> GetScreenInfos()
@@ -133,7 +131,7 @@ namespace AngryMouse
                     WorkWidth = screen.WorkingArea.Width,
                     WorkHeight = screen.WorkingArea.Height,
                     Primary = screen.Primary,
-                    BPP = screen.BitsPerPixel
+                    Bpp = screen.BitsPerPixel
                 });
             }
 

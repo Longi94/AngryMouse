@@ -10,13 +10,8 @@ namespace AngryMouse
     /// <summary>
     /// Interaction logic for DebugInfoWindow.xaml
     /// </summary>
-    public partial class DebugInfoWindow : Window
+    public partial class DebugInfoWindow
     {
-        /// <summary>
-        /// Globa hook to show debug information
-        /// </summary>
-        private IKeyboardMouseEvents mouseEvents;
-
         /// <summary>
         /// List of screens.
         /// </summary>
@@ -33,7 +28,7 @@ namespace AngryMouse
 
             detector.MouseShake += OnMouseShake;
 
-            mouseEvents = Hook.GlobalEvents();
+            var mouseEvents = Hook.GlobalEvents();
             mouseEvents.MouseMoveExt += OnMouseMove;
 
             ScreenInfos = new ObservableCollection<ScreenInfo>(screenInfos);
@@ -54,5 +49,4 @@ namespace AngryMouse
             Coordinates.Content = e.X + "," + e.Y;
         }
     }
-
 }
