@@ -30,4 +30,17 @@ namespace AngryMouse.Util
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
         }
     }
+
+    public class WindowLoadedEventArgs : EventArgs
+    {
+        public readonly double DpiWidthFactor;
+
+        public readonly double DpiHeightFactor;
+
+        public WindowLoadedEventArgs(double dpiWidthFactor, double dpiHeightFactor)
+        {
+            DpiWidthFactor = dpiWidthFactor;
+            DpiHeightFactor = dpiHeightFactor;
+        }
+    }
 }

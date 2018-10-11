@@ -1,5 +1,6 @@
 ﻿using AngryMouse.Animation;
 using AngryMouse.Screen;
+using AngryMouse.Util;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Windows;
@@ -73,6 +74,11 @@ namespace AngryMouse
         private double scaleAnimEnd = MaxScale;
 
         /// <summary>
+        /// The event fired when this window finishe loading.
+        /// </summary>
+        public event EventHandler<WindowLoadedEventArgs> OnLoad;
+
+        /// <summary>
         /// Main constructor.
         /// </summary>
         /// <param name="screen">The window to show the screen in.</param>
@@ -110,6 +116,11 @@ namespace AngryMouse
 
             BigCursor.RenderTransform = transformGroup;
 
+            // Open this window maximized on the appropriate screen
+            Top = screen.BoundY;
+            Left = screen.BoundX;
+            WindowState = WindowState.Maximized;
+
             OverlayCanvas.Width = screen.BoundWidth;
             OverlayCanvas.Height = screen.BoundHeight;
 
@@ -122,6 +133,10 @@ namespace AngryMouse
 
             Viewbox.Width = screen.BoundWidth / dpiWidthFactor;
             Viewbox.Height = screen.BoundHeight / dpiHeightFactor;
+
+            // Fire the loaded event to inform the app about the scale factor of this screen.
+            WindowLoadedEventArgs args = new WindowLoadedEventArgs(dpiWidthFactor, dpiHeightFactor);
+            OnLoad?.Invoke(this, args);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@
         AllowDrop="False"
         WindowStyle="None"
         AllowsTransparency="True"
-        WindowState="Maximized"
+        WindowState="Normal"
         Loaded="Window_Loaded">
     <Grid Name="Root">
         <Viewbox Name="Viewbox">

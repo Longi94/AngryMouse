@@ -25,14 +25,19 @@ namespace AngryMouse
         private MouseShakeDetector detector;
 
         /// <summary>
-        /// The overlay window.
-        /// </summary>
-        private OverlayWindow overlayWindow;
-
-        /// <summary>
         /// Debug window. Only shown when the -d option is used.
         /// </summary>
         private DebugInfoWindow debugInfoWindow;
+
+        /// <summary>
+        /// The list of screens.
+        /// </summary>
+        private List<ScreenInfo> screenInfos;
+
+        /// <summary>
+        /// The list of overlay windows that draw the big mouse.
+        /// </summary>
+        private List<OverlayWindow> overlayWindows = new List<OverlayWindow>();
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -56,18 +61,21 @@ namespace AngryMouse
             detector = new MouseShakeDetector();
             detector.MouseShake += OnMouseShake;
 
-            var screenInfos = GetScreenInfos();
+            screenInfos = GetScreenInfos();
             // TODO support multiple screens
             var primaryScreen = screenInfos.Find(info => info.Primary);
 
             if (debug)
             {
-                debugInfoWindow = new DebugInfoWindow(detector, screenInfos);
+                debugInfoWindow = new DebugInfoWindow(detector, GetScreenInfos());
                 debugInfoWindow.Show();
             }
 
-            overlayWindow = new OverlayWindow(primaryScreen);
-            overlayWindow.Show();
+            var primary = new OverlayWindow(primaryScreen);
+            primary.OnLoad += OnPrimaryLoad;
+            primary.Show();
+
+            overlayWindows.Add(primary);
         }
 
         /// <summary>
@@ -87,10 +95,32 @@ namespace AngryMouse
         /// </summary>
         private void ExitApp()
         {
-            overlayWindow?.Close();
+            overlayWindows.ForEach(window => window.Close());
             debugInfoWindow?.Close();
             notifyIcon.Dispose();
             notifyIcon = null;
+        }
+
+        /// <summary>
+        /// Called when the primary overlay window is fully loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPrimaryLoad(object sender, WindowLoadedEventArgs e)
+        {
+            // Create and load windows on the secondary screens.
+            foreach (var screen in screenInfos.FindAll(info => !info.Primary))
+            {
+                screen.BoundHeight = (int) (screen.BoundHeight / e.DpiHeightFactor);
+                screen.BoundWidth = (int) (screen.BoundWidth / e.DpiWidthFactor);
+                screen.BoundX = (int) (screen.BoundX / e.DpiWidthFactor);
+                screen.BoundY = (int) (screen.BoundY / e.DpiHeightFactor);
+
+                var window = new OverlayWindow(screen);
+                window.Show();
+
+                overlayWindows.Add(window);
+            }
         }
 
         /// <summary>
@@ -100,7 +130,7 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseShake(object sender, MouseShakeArgs e)
         {
-            overlayWindow.SetMouseShake(e.IsShaking, e.Timestamp);
+            overlayWindows.ForEach(window => window.SetMouseShake(e.IsShaking, e.Timestamp));
         }
 
         private List<ScreenInfo> GetScreenInfos()
