@@ -66,13 +66,13 @@ namespace AngryMouse.Animation
         /// <summary>
         /// dpi info
         /// </summary>
-        private readonly DpiScale _dpiInfo;
+        public DpiScale DpiInfo;
 
         public MouseAnimator(ScaleTransform cursorScale, Path bigCursor, DpiScale dpiInfo)
         {
             _cursorScale = cursorScale;
             _bigCursor = bigCursor;
-            _dpiInfo = dpiInfo;
+            DpiInfo = dpiInfo;
         }
 
         public void SetMouseShake(bool shaking, DateTime timestamp)
@@ -124,7 +124,7 @@ namespace AngryMouse.Animation
                 {
                     if (_shaking)
                     {
-                        _cursorScale.ScaleX = _cursorScale.ScaleY = MaxScale * _dpiInfo.PixelsPerDip;
+                        _cursorScale.ScaleX = _cursorScale.ScaleY = MaxScale * DpiInfo.PixelsPerDip;
                         _bigCursor.Visibility = Visibility.Visible;
                     }
                     else
@@ -143,7 +143,7 @@ namespace AngryMouse.Animation
                     return;
                 }
 
-                _currentScale = scale * _dpiInfo.PixelsPerDip;
+                _currentScale = scale * DpiInfo.PixelsPerDip;
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     _cursorScale.ScaleX = _cursorScale.ScaleY = _currentScale;

@@ -75,6 +75,12 @@ namespace AngryMouse
             SetWindowStyles(this, ExtendedWindowStyles.WS_EX_TOOLWINDOW | ExtendedWindowStyles.WS_EX_TRANSPARENT);
         }
 
+        protected override void OnDpiChanged(DpiScale oldDpiScaleInfo, DpiScale newDpiScaleInfo)
+        {
+            _dpiInfo = newDpiScaleInfo;
+            _mouseAnimator.DpiInfo = newDpiScaleInfo;
+        }
+
         /// <summary>
         /// Called when the window is successfully loaded. Does some view initialization.
         /// </summary>
