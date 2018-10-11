@@ -13,6 +13,10 @@ namespace AngryMouse
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        /// <summary>
+        /// Debug mode
+        /// </summary>
+        private bool debug = false;
 
         /// <summary>
         /// Notification icon in the taskbar.
@@ -42,8 +46,7 @@ namespace AngryMouse
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            bool debug = false;
+            
             ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(e.Args);
 
             parserResult.WithParsed((options) => {
@@ -62,20 +65,21 @@ namespace AngryMouse
             detector.MouseShake += OnMouseShake;
 
             screenInfos = GetScreenInfos();
-            // TODO support multiple screens
-            var primaryScreen = screenInfos.Find(info => info.Primary);
 
             if (debug)
             {
-                debugInfoWindow = new DebugInfoWindow(detector, GetScreenInfos());
+                debugInfoWindow = new DebugInfoWindow(detector, screenInfos);
                 debugInfoWindow.Show();
             }
 
-            var primary = new OverlayWindow(primaryScreen);
-            primary.OnLoad += OnPrimaryLoad;
-            primary.Show();
+            // Create and load windows on the secondary screens.
+            foreach (var screen in screenInfos)
+            {
+                var window = new OverlayWindow(screen, debug);
+                window.Show();
 
-            overlayWindows.Add(primary);
+                overlayWindows.Add(window);
+            }
         }
 
         /// <summary>
@@ -99,28 +103,6 @@ namespace AngryMouse
             debugInfoWindow?.Close();
             notifyIcon.Dispose();
             notifyIcon = null;
-        }
-
-        /// <summary>
-        /// Called when the primary overlay window is fully loaded.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnPrimaryLoad(object sender, WindowLoadedEventArgs e)
-        {
-            // Create and load windows on the secondary screens.
-            foreach (var screen in screenInfos.FindAll(info => !info.Primary))
-            {
-                screen.BoundHeight = (int) (screen.BoundHeight / e.DpiHeightFactor);
-                screen.BoundWidth = (int) (screen.BoundWidth / e.DpiWidthFactor);
-                screen.BoundX = (int) (screen.BoundX / e.DpiWidthFactor);
-                screen.BoundY = (int) (screen.BoundY / e.DpiHeightFactor);
-
-                var window = new OverlayWindow(screen);
-                window.Show();
-
-                overlayWindows.Add(window);
-            }
         }
 
         /// <summary>

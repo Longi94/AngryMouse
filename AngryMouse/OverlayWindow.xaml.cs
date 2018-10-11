@@ -3,6 +3,7 @@ using AngryMouse.Screen;
 using AngryMouse.Util;
 using Gma.System.MouseKeyHook;
 using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -24,6 +25,11 @@ namespace AngryMouse
         /// Maximum cursor size.
         /// </summary>
         private const double MaxScale = 0.3;
+
+        /// <summary>
+        /// Show debug info
+        /// </summary>
+        private bool debug;
 
         /// <summary>
         /// We also subscribe to mouse move events so we know where to draw.
@@ -74,18 +80,19 @@ namespace AngryMouse
         private double scaleAnimEnd = MaxScale;
 
         /// <summary>
-        /// The event fired when this window finishe loading.
+        /// DPI scale info of the current screen.
         /// </summary>
-        public event EventHandler<WindowLoadedEventArgs> OnLoad;
+        private DpiScale dpiInfo;
 
         /// <summary>
         /// Main constructor.
         /// </summary>
         /// <param name="screen">The window to show the screen in.</param>
-        public OverlayWindow(ScreenInfo screen)
+        public OverlayWindow(ScreenInfo screen, bool debug = false)
         {
             InitializeComponent();
 
+            this.debug = debug;
             this.screen = screen;
 
             mouseEvents = Hook.GlobalEvents();
@@ -109,6 +116,12 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!debug)
+            {
+                Root.Children.Remove(DebugInfo);
+                OverlayCanvas.Children.Remove(MousePosDebug);
+            }
+
             TransformGroup transformGroup = new TransformGroup();
 
             transformGroup.Children.Add(cursorTranslate);
@@ -124,19 +137,16 @@ namespace AngryMouse
             OverlayCanvas.Width = screen.BoundWidth;
             OverlayCanvas.Height = screen.BoundHeight;
 
-            // DPI scaling workaround, Viewbox HACKK
-            PresentationSource presentationSource = PresentationSource.FromVisual(this);
-            Matrix m = presentationSource.CompositionTarget.TransformToDevice;
+            dpiInfo = VisualTreeHelper.GetDpi(this);
 
-            double dpiWidthFactor = m.M11;
-            double dpiHeightFactor = m.M22;
+            Viewbox.Width = screen.BoundWidth / dpiInfo.PixelsPerDip;
+            Viewbox.Height = screen.BoundHeight / dpiInfo.PixelsPerDip;
 
-            Viewbox.Width = screen.BoundWidth / dpiWidthFactor;
-            Viewbox.Height = screen.BoundHeight / dpiHeightFactor;
-
-            // Fire the loaded event to inform the app about the scale factor of this screen.
-            WindowLoadedEventArgs args = new WindowLoadedEventArgs(dpiWidthFactor, dpiHeightFactor);
-            OnLoad?.Invoke(this, args);
+            if (debug)
+            {
+                MousePosDebug.Width = MousePosDebug.Width * dpiInfo.PixelsPerDip;
+                MousePosDebug.Height = MousePosDebug.Height * dpiInfo.PixelsPerDip;
+            }
         }
 
         /// <summary>
@@ -146,6 +156,21 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
+            if (debug)
+            {
+                var infoBuilder = new StringBuilder();
+                infoBuilder
+                    .AppendFormat("Name {0}", screen.Name).AppendLine()
+                    .AppendFormat("Primary {0}", screen.Primary).AppendLine()
+                    .AppendFormat("PixelsPerDip {0}", dpiInfo.PixelsPerDip).AppendLine()
+                    .AppendFormat("Mouse {0},{1}", e.X, e.Y).AppendLine()
+                    .AppendFormat("Draw {0},{1}", e.X - screen.BoundX, e.Y - screen.BoundY);
+                DebugInfo.Content = infoBuilder.ToString();
+
+                Canvas.SetTop(MousePosDebug, e.Y - screen.BoundY);
+                Canvas.SetLeft(MousePosDebug, e.X - screen.BoundX);
+            }
+
             if (e.X < screen.BoundX || e.X > screen.BoundX + screen.BoundWidth ||
                 e.Y < screen.BoundY || e.Y > screen.BoundY + screen.BoundHeight)
             {
@@ -164,7 +189,7 @@ namespace AngryMouse
             {
                 if (shaking)
                 {
-                    cursorScale.ScaleX = cursorScale.ScaleY = MaxScale;
+                    cursorScale.ScaleX = cursorScale.ScaleY = MaxScale * dpiInfo.PixelsPerDip;
                     BigCursor.Visibility = Visibility.Visible;
                 }
                 else
@@ -184,8 +209,8 @@ namespace AngryMouse
                     return;
                 }
 
-                currentScale = scale;
-                cursorScale.ScaleX = cursorScale.ScaleY = scale;
+                currentScale = scale * dpiInfo.PixelsPerDip;
+                cursorScale.ScaleX = cursorScale.ScaleY = currentScale;
                 BigCursor.Visibility = Visibility.Visible;
             }
         }

@@ -17,6 +17,14 @@
         WindowState="Normal"
         Loaded="Window_Loaded">
     <Grid Name="Root">
+        <Label	
+            Name="DebugInfo"	
+            Content=""	
+            Background="Black"	
+            Foreground="White"	
+            HorizontalAlignment="Right"	
+            VerticalAlignment="Bottom"	
+            Margin="0,0,0,0" />
         <Viewbox Name="Viewbox">
             <Canvas Name="OverlayCanvas">
                 <Path Name="BigCursor" Fill="#FFFFFFFF" Stroke="Black" StrokeThickness="25" Visibility="Hidden">
@@ -24,6 +32,7 @@
                         <PathGeometry Figures="M 0,-0.551 V 799 L 201,599 321,890 401,850 276,549 h 275 z" FillRule="NonZero"/>
                     </Path.Data>
                 </Path>
+                <Rectangle Name="MousePosDebug" Width="20" Height="20" Fill="Green"/>
             </Canvas>
         </Viewbox>
     </Grid>
