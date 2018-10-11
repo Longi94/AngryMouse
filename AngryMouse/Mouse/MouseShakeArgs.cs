@@ -16,8 +16,8 @@ namespace AngryMouse.Mouse
         /// <summary>
         /// The this thing occured.
         /// </summary>
-        public readonly int Timestamp;
-        public MouseShakeArgs(bool shaking, int timestamp)
+        public readonly DateTime Timestamp;
+        public MouseShakeArgs(bool shaking, DateTime timestamp)
         {
             IsShaking = shaking;
             Timestamp = timestamp;

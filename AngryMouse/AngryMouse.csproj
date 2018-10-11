@@ -77,6 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Animation\Easing.cs" />
+    <Compile Include="Animation\MouseAnimator.cs" />
     <Compile Include="DebugInfoWindow.xaml.cs">
       <DependentUpon>DebugInfoWindow.xaml</DependentUpon>
     </Compile>
@@ -120,7 +121,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.manifest" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -136,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Cursor.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

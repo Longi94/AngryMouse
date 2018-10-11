@@ -96,7 +96,7 @@ namespace AngryMouse.Mouse
                 if (this.shaking != shaking)
                 {
                     this.shaking = shaking;
-                    MouseShakeArgs args = new MouseShakeArgs(shaking, e.Timestamp);
+                    MouseShakeArgs args = new MouseShakeArgs(shaking, DateTime.Now);
                     MouseShake?.Invoke(this, args);
                 }
             }

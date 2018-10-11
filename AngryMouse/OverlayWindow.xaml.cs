@@ -17,16 +17,6 @@ namespace AngryMouse
     public partial class OverlayWindow : Window
     {
         /// <summary>
-        /// Time of the animation if the scaling goes from 0 to Max or vice versa.
-        /// </summary>
-        private const int MaxAnimationLength = 200;
-
-        /// <summary>
-        /// Maximum cursor size.
-        /// </summary>
-        private const double MaxScale = 0.3;
-
-        /// <summary>
         /// Show debug info
         /// </summary>
         private bool debug;
@@ -60,29 +50,11 @@ namespace AngryMouse
         private bool shaking = false;
 
         /// <summary>
-        /// The start of the animation
-        /// </summary>
-        private int animationStart = 0;
-
-        /// <summary>
-        /// The current scale of the cursor. Stored so we can start a new animation from the middle scale if needed.
-        /// </summary>
-        private double currentScale = 0;
-
-        /// <summary>
-        /// The scale to start the animation from.
-        /// </summary>
-        private double scaleAnimStart = 0;
-
-        /// <summary>
-        /// The scale to end the animation at.
-        /// </summary>
-        private double scaleAnimEnd = MaxScale;
-
-        /// <summary>
         /// DPI scale info of the current screen.
         /// </summary>
         private DpiScale dpiInfo;
+
+        private MouseAnimator _mouseAnimator;
 
         /// <summary>
         /// Main constructor.
@@ -147,6 +119,8 @@ namespace AngryMouse
                 MousePosDebug.Width = MousePosDebug.Width * dpiInfo.PixelsPerDip;
                 MousePosDebug.Height = MousePosDebug.Height * dpiInfo.PixelsPerDip;
             }
+
+            _mouseAnimator = new MouseAnimator(cursorScale, BigCursor, dpiInfo);
         }
 
         /// <summary>
@@ -156,6 +130,8 @@ namespace AngryMouse
         /// <param name="e"></param>
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
+            var mouseInScreen = e.X >= screen.BoundX && e.X <= screen.BoundX + screen.BoundWidth && 
+                                e.Y >= screen.BoundY && e.Y <= screen.BoundY + screen.BoundHeight;
             if (debug)
             {
                 var infoBuilder = new StringBuilder();
@@ -164,6 +140,7 @@ namespace AngryMouse
                     .AppendFormat("Primary {0}", screen.Primary).AppendLine()
                     .AppendFormat("PixelsPerDip {0}", dpiInfo.PixelsPerDip).AppendLine()
                     .AppendFormat("Mouse {0},{1}", e.X, e.Y).AppendLine()
+                    .AppendFormat("InScreen {0}", mouseInScreen).AppendLine()
                     .AppendFormat("Draw {0},{1}", e.X - screen.BoundX, e.Y - screen.BoundY);
                 DebugInfo.Content = infoBuilder.ToString();
 
@@ -171,12 +148,9 @@ namespace AngryMouse
                 Canvas.SetLeft(MousePosDebug, e.X - screen.BoundX);
             }
 
-            if (e.X < screen.BoundX || e.X > screen.BoundX + screen.BoundWidth ||
-                e.Y < screen.BoundY || e.Y > screen.BoundY + screen.BoundHeight)
+            _mouseAnimator.MouseInScreen = mouseInScreen;
+            if (!mouseInScreen)
             {
-                // mouse is outside of this window
-                cursorScale.ScaleX = cursorScale.ScaleY = 0;
-                BigCursor.Visibility = Visibility.Hidden;
                 return;
             }
 
@@ -184,35 +158,6 @@ namespace AngryMouse
             cursorTranslate.Y = e.Y - screen.BoundY;
             cursorScale.CenterX = e.X - screen.BoundX;
             cursorScale.CenterY = e.Y - screen.BoundY;
-
-            if (e.Timestamp - animationStart > MaxAnimationLength)
-            {
-                if (shaking)
-                {
-                    cursorScale.ScaleX = cursorScale.ScaleY = MaxScale * dpiInfo.PixelsPerDip;
-                    BigCursor.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    cursorScale.ScaleX = cursorScale.ScaleY = 0;
-                    BigCursor.Visibility = Visibility.Hidden;
-                }
-            }
-            else
-            {
-                double scale = CalculateScale(e.Timestamp);
-
-                if (scale < 0 || scale > MaxScale)
-                {
-                    // This can happen when this function is called before SetMouseShake
-                    // Just ignore it end everything will be fine ¯\_(ツ)_/¯
-                    return;
-                }
-
-                currentScale = scale * dpiInfo.PixelsPerDip;
-                cursorScale.ScaleX = cursorScale.ScaleY = currentScale;
-                BigCursor.Visibility = Visibility.Visible;
-            }
         }
 
         /// <summary>
@@ -221,35 +166,9 @@ namespace AngryMouse
         /// </summary>
         /// <param name="shaking">Whether the mouse is shaking or not.</param>
         /// <param name="timestamp">The timestamp the shake change occured at.</param>
-        public void SetMouseShake(bool shaking, int timestamp)
+        public void SetMouseShake(bool shaking, DateTime timestamp)
         {
-            if (this.shaking != shaking)
-            {
-                this.shaking = shaking;
-
-                animationStart = timestamp;
-
-                scaleAnimStart = currentScale;
-                scaleAnimEnd = shaking ? MaxScale : 0;
-            }
-        }
-
-        /// <summary>
-        /// Calculate the current scale of the cursor.
-        /// </summary>
-        /// <param name="timestamp">The timestamp of the frame the calculate for.</param>
-        /// <returns></returns>
-        private double CalculateScale(int timestamp)
-        {
-            double animLength = Math.Abs(scaleAnimEnd - scaleAnimStart) / MaxScale * MaxAnimationLength;
-
-            int elapsed = timestamp - animationStart;
-
-            double t = elapsed / animLength;
-
-            double tEase = Easing.CubicInOut(t);
-
-            return (scaleAnimEnd - scaleAnimStart) * tEase + scaleAnimStart;
+            _mouseAnimator.SetMouseShake(shaking, timestamp);
         }
     }
 }
