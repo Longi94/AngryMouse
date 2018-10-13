@@ -32,7 +32,7 @@
                   IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Bpp" Binding="{Binding BPP}" />
+                <DataGridTextColumn Header="Bpp" Binding="{Binding Bpp}" />
                 <DataGridTextColumn Header="BoundX" Binding="{Binding BoundX}" />
                 <DataGridTextColumn Header="BoundY" Binding="{Binding BoundY}" />
                 <DataGridTextColumn Header="BoundWidth" Binding="{Binding BoundWidth}" />
