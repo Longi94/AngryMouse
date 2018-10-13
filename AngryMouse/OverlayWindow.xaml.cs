@@ -78,7 +78,10 @@ namespace AngryMouse
         protected override void OnDpiChanged(DpiScale oldDpiScaleInfo, DpiScale newDpiScaleInfo)
         {
             _dpiInfo = newDpiScaleInfo;
-            _mouseAnimator.DpiInfo = newDpiScaleInfo;
+            if (_mouseAnimator != null)
+            {
+                _mouseAnimator.DpiInfo = newDpiScaleInfo;
+            }
         }
 
         /// <summary>

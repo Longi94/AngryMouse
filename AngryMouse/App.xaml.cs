@@ -43,6 +43,8 @@ namespace AngryMouse
         /// </summary>
         private readonly List<OverlayWindow> _overlayWindows = new List<OverlayWindow>();
 
+        private SettingsWindow _settingsWindow;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -87,6 +89,19 @@ namespace AngryMouse
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
+            menu.Items.Add("Settings").Click += (s, e) =>
+            {
+                if (_settingsWindow != null)
+                {
+                    _settingsWindow.Focus();
+                }
+                else
+                {
+                    _settingsWindow = new SettingsWindow();
+                    _settingsWindow.Show();
+                    _settingsWindow.Closed += (sender, args) => { _settingsWindow = null; };
+                }
+            };
             menu.Items.Add("Exit").Click += (s, e) => ExitApp();
 
             _notifyIcon.ContextMenuStrip = menu;

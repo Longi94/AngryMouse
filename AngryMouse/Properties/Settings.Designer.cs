@@ -22,5 +22,17 @@ namespace AngryMouse.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public double CursorSize {
+            get {
+                return ((double)(this["CursorSize"]));
+            }
+            set {
+                this["CursorSize"] = value;
+            }
+        }
     }
 }

@@ -82,6 +82,9 @@
       <DependentUpon>DebugInfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screen\ScreenInfo.cs" />
+    <Compile Include="SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util\Options.cs" />
     <Compile Include="Util\WindowUtil.cs" />
     <Compile Include="App.xaml.cs">
@@ -93,6 +96,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OverlayWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

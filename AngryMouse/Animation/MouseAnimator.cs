@@ -124,7 +124,7 @@ namespace AngryMouse.Animation
                 {
                     if (_shaking)
                     {
-                        _cursorScale.ScaleX = _cursorScale.ScaleY = MaxScale * DpiInfo.PixelsPerDip;
+                        _cursorScale.ScaleX = _cursorScale.ScaleY = MaxScale * (Properties.Settings.Default.CursorSize / 10.0) * DpiInfo.PixelsPerDip;
                         _bigCursor.Visibility = Visibility.Visible;
                     }
                     else
@@ -136,7 +136,7 @@ namespace AngryMouse.Animation
             }
             else
             {
-                var scale = CalculateScale(e.SignalTime);
+                var scale = CalculateScale(e.SignalTime) * (Properties.Settings.Default.CursorSize / 10.0);
 
                 if (scale < 0 || scale > MaxScale)
                 {
