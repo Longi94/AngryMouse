@@ -28,7 +28,7 @@ namespace AngryMouse
 
             detector.MouseShake += OnMouseShake;
 
-            var mouseEvents = Hook.GlobalEvents();
+            var mouseEvents = StaticHook.GlobalEvents();
             mouseEvents.MouseMoveExt += OnMouseMove;
 
             ScreenInfos = new ObservableCollection<ScreenInfo>(screenInfos);

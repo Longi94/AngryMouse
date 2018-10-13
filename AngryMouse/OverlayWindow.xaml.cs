@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AngryMouse.Mouse;
 using static AngryMouse.Util.WindowUtil;
 
 namespace AngryMouse
@@ -61,7 +62,7 @@ namespace AngryMouse
             _debug = debug;
             _screen = screen;
 
-            var mouseEvents = Hook.GlobalEvents();
+            var mouseEvents = StaticHook.GlobalEvents();
             mouseEvents.MouseMoveExt += OnMouseMove;
         }
 

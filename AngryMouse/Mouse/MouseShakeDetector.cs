@@ -71,7 +71,7 @@ namespace AngryMouse.Mouse
         /// </summary>
         public MouseShakeDetector()
         {
-            _mouseEvents = Hook.GlobalEvents();
+            _mouseEvents = StaticHook.GlobalEvents();
 
             _mouseEvents.MouseMoveExt += OnMouseMove;
 

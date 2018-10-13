@@ -113,6 +113,7 @@
     <Compile Include="DebugInfoWindow.xaml.cs">
       <DependentUpon>DebugInfoWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mouse\StaticHook.cs" />
     <Compile Include="Screen\ScreenInfo.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
