@@ -1,4 +1,5 @@
-﻿using AngryMouse.Mouse;
+﻿using System;
+using AngryMouse.Mouse;
 using AngryMouse.Screen;
 using Gma.System.MouseKeyHook;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace AngryMouse
     /// </summary>
     public partial class DebugInfoWindow
     {
+        /// <summary>
+        /// Globa hook to show debug information
+        /// </summary>
+        private readonly IKeyboardMouseEvents _mouseEvents;
+
         /// <summary>
         /// List of screens.
         /// </summary>
@@ -28,8 +34,8 @@ namespace AngryMouse
 
             detector.MouseShake += OnMouseShake;
 
-            var mouseEvents = StaticHook.GlobalEvents();
-            mouseEvents.MouseMoveExt += OnMouseMove;
+            _mouseEvents = StaticHook.GlobalEvents();
+            _mouseEvents.MouseMoveExt += OnMouseMove;
 
             ScreenInfos = new ObservableCollection<ScreenInfo>(screenInfos);
 
@@ -47,6 +53,11 @@ namespace AngryMouse
         private void OnMouseMove(object sender, MouseEventExtArgs e)
         {
             Coordinates.Content = e.X + "," + e.Y;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            _mouseEvents.MouseMoveExt -= OnMouseMove;
         }
     }
 }

@@ -51,6 +51,11 @@ namespace AngryMouse
         private MouseAnimator _mouseAnimator;
 
         /// <summary>
+        /// We also subscribe to mouse move events so we know where to draw.
+        /// </summary>
+        private readonly IKeyboardMouseEvents _mouseEvents;
+
+        /// <summary>
         /// Main constructor.
         /// </summary>
         /// <param name="screen">The window to show the screen in.</param>
@@ -62,8 +67,8 @@ namespace AngryMouse
             _debug = debug;
             _screen = screen;
 
-            var mouseEvents = StaticHook.GlobalEvents();
-            mouseEvents.MouseMoveExt += OnMouseMove;
+            _mouseEvents = StaticHook.GlobalEvents();
+            _mouseEvents.MouseMoveExt += OnMouseMove;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -125,6 +130,11 @@ namespace AngryMouse
             }
 
             _mouseAnimator = new MouseAnimator(_cursorScale, BigCursor, _dpiInfo);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            _mouseEvents.MouseMoveExt -= OnMouseMove;
         }
 
         /// <summary>
