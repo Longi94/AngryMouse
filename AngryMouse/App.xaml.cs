@@ -40,6 +40,8 @@ namespace AngryMouse
 
         private SettingsWindow _settingsWindow;
 
+        private AboutWindow _aboutWindow;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -98,6 +100,20 @@ namespace AngryMouse
                     _settingsWindow.Closed += (sender, args) => { _settingsWindow = null; };
                 }
             };
+            menu.Items.Add("About").Click += (s, e) =>
+            {
+                if (_aboutWindow != null)
+                {
+                    _aboutWindow.Focus();
+                }
+                else
+                {
+                    _aboutWindow = new AboutWindow();
+                    _aboutWindow.Show();
+                    _aboutWindow.Closed += (sender, args) => { _aboutWindow = null; };
+                }
+            };
+            menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Exit").Click += (s, e) => ExitApp();
 
             _notifyIcon.ContextMenuStrip = menu;
