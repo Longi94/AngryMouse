@@ -15,7 +15,8 @@
         WindowStyle="None"
         AllowsTransparency="True"
         WindowState="Normal"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
     <Grid Name="Root">
         <Label	
             Name="DebugInfo"	

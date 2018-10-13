@@ -29,11 +29,6 @@ namespace AngryMouse
         private MouseShakeDetector _detector;
 
         /// <summary>
-        /// Debug window. Only shown when the -d option is used.
-        /// </summary>
-        private DebugInfoWindow _debugInfoWindow;
-
-        /// <summary>
         /// The list of screens.
         /// </summary>
         private List<ScreenInfo> _screenInfos;
@@ -68,8 +63,9 @@ namespace AngryMouse
 
             if (_debug)
             {
-                _debugInfoWindow = new DebugInfoWindow(_detector, _screenInfos);
-                _debugInfoWindow.Show();
+                // Debug window. Only shown when the -d option is used.
+                var debugInfoWindow = new DebugInfoWindow(_detector, _screenInfos);
+                debugInfoWindow.Show();
             }
 
             // Create and load windows on the secondary screens.
@@ -112,10 +108,8 @@ namespace AngryMouse
         /// </summary>
         private void ExitApp()
         {
-            _overlayWindows.ForEach(window => window.Close());
-            _debugInfoWindow?.Close();
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
+            _detector.Dispose();
+            Current.Shutdown();
         }
 
         /// <summary>
