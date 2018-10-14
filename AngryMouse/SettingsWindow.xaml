@@ -11,7 +11,7 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         Loaded="Window_Loaded">
-    <Grid>
+    <Grid Margin="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -37,5 +37,21 @@
             Margin="2" />
         <Label Grid.Column="2" Grid.Row="0"
                Content="{Binding ElementName=SizeSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+
+        <Label Grid.Column="0" Grid.Row="1" Content="Animation Length" Margin="2" />
+        <Slider
+            Name="AnimationLengthSlider"
+            Grid.Column="1"
+            Grid.Row="1"
+            Width="200"
+            VerticalAlignment="Center"
+            Minimum="0"
+            Maximum="1000"
+            TickFrequency="50"
+            IsSnapToTickEnabled="True"
+            TickPlacement="BottomRight"
+            Margin="2" />
+        <Label Grid.Column="2" Grid.Row="1"
+               Content="{Binding ElementName=AnimationLengthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
     </Grid>
 </Window>

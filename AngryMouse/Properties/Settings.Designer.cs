@@ -34,5 +34,17 @@ namespace AngryMouse.Properties {
                 this["CursorSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int CursorAnimationLength {
+            get {
+                return ((int)(this["CursorAnimationLength"]));
+            }
+            set {
+                this["CursorAnimationLength"] = value;
+            }
+        }
     }
 }

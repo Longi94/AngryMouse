@@ -12,7 +12,6 @@ namespace AngryMouse
             InitializeComponent();
         }
 
-
         /// <summary>
         /// Called when the window is successfully loaded. Does some view initialization.
         /// </summary>
@@ -22,11 +21,19 @@ namespace AngryMouse
         {
             SizeSlider.Value = Properties.Settings.Default.CursorSize;
             SizeSlider.ValueChanged += SizeSlider_OnValueChanged;
+            AnimationLengthSlider.Value = Properties.Settings.Default.CursorAnimationLength;
+            AnimationLengthSlider.ValueChanged += AnimationLengthSlider_OnValueChanged;
         }
 
         private void SizeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Properties.Settings.Default.CursorSize = e.NewValue;
+            Properties.Settings.Default.Save();
+        }
+
+        private void AnimationLengthSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Properties.Settings.Default.CursorAnimationLength = (int) e.NewValue;
             Properties.Settings.Default.Save();
         }
     }

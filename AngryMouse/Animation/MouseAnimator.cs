@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -7,11 +8,6 @@ namespace AngryMouse.Animation
 {
     class MouseAnimator
     {
-        /// <summary>
-        /// Time of the animation if the scaling goes from 0 to Max or vice versa.
-        /// </summary>
-        private const int AnimLength = 200;
-
         /// <summary>
         /// Maximum cursor size.
         /// </summary>
@@ -42,12 +38,23 @@ namespace AngryMouse.Animation
             _cursorScale = cursorScale;
             DpiInfo = dpiInfo;
 
+            Properties.Settings.Default.PropertyChanged += DefaultOnPropertyChanged;
+
             _scaleAnimation = new DoubleAnimation
             {
-                Duration = new Duration(TimeSpan.FromMilliseconds(AnimLength)),
+                Duration = new Duration(TimeSpan.FromMilliseconds(Properties.Settings.Default.CursorAnimationLength)),
                 EasingFunction = new CubicEase {EasingMode = EasingMode.EaseInOut},
                 RepeatBehavior = new RepeatBehavior(1)
             };
+        }
+
+        private void DefaultOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("CursorAnimationLength"))
+            {
+                _scaleAnimation.Duration =
+                    new Duration(TimeSpan.FromMilliseconds(Properties.Settings.Default.CursorAnimationLength));
+            }
         }
 
         public void SetMouseShake(bool shaking, DateTime timestamp)
@@ -56,7 +63,8 @@ namespace AngryMouse.Animation
             _shaking = shaking;
 
             _scaleAnimation.From = _cursorScale.ScaleX;
-            _scaleAnimation.To = shaking ? MaxScale * (Properties.Settings.Default.CursorSize / 10.0) * DpiInfo.PixelsPerDip : 0;
+            _scaleAnimation.To =
+                shaking ? MaxScale * (Properties.Settings.Default.CursorSize / 10.0) * DpiInfo.PixelsPerDip : 0;
 
             _cursorScale.BeginAnimation(ScaleTransform.ScaleXProperty, _scaleAnimation);
             _cursorScale.BeginAnimation(ScaleTransform.ScaleYProperty, _scaleAnimation);
