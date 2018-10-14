@@ -126,7 +126,6 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Animation\Easing.cs" />
     <Compile Include="Animation\MouseAnimator.cs" />
     <Compile Include="DebugInfoWindow.xaml.cs">
       <DependentUpon>DebugInfoWindow.xaml</DependentUpon>

@@ -129,7 +129,7 @@ namespace AngryMouse
                 MousePosDebug.Height = MousePosDebug.Height * _dpiInfo.PixelsPerDip;
             }
 
-            _mouseAnimator = new MouseAnimator(_cursorScale, BigCursor, _dpiInfo);
+            _mouseAnimator = new MouseAnimator(_cursorScale, _dpiInfo);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -162,7 +162,7 @@ namespace AngryMouse
                 Canvas.SetLeft(MousePosDebug, e.X - _screen.BoundX);
             }
 
-            _mouseAnimator.MouseInScreen = mouseInScreen;
+            BigCursor.Visibility = mouseInScreen ? Visibility.Visible : Visibility.Hidden;
             if (!mouseInScreen)
             {
                 return;
