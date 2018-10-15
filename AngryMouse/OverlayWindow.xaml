@@ -28,9 +28,9 @@
             Margin="0,0,0,0" />
         <Viewbox Name="Viewbox">
             <Canvas Name="OverlayCanvas">
-                <Path Name="BigCursor" Fill="#FFFFFFFF" Stroke="Black" StrokeThickness="25">
+                <Path Name="BigCursor" Fill="#FFFFFFFF" Stroke="Black" StrokeThickness="10">
                     <Path.Data>
-                        <PathGeometry Figures="M 0,-0.551 V 799 L 201,599 321,890 401,850 276,549 h 275 z" FillRule="NonZero"/>
+                        <PathGeometry Figures="M 0,0 164,164 H 93.2 L 123,237 82.4,254 52,181 0,233 Z" FillRule="NonZero"/>
                     </Path.Data>
                 </Path>
                 <Rectangle Name="MousePosDebug" Width="20" Height="20" Fill="Green"/>

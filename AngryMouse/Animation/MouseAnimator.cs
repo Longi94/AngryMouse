@@ -11,7 +11,7 @@ namespace AngryMouse.Animation
         /// <summary>
         /// Maximum cursor size.
         /// </summary>
-        private const double MaxScale = 0.3;
+        private const double MaxScale = 1;
 
         /// <summary>
         /// Scales the cursor.
