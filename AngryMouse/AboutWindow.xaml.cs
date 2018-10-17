@@ -1,5 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AngryMouse
 {
@@ -18,6 +22,13 @@ namespace AngryMouse
             AppName.Content = Assembly.GetExecutingAssembly().GetName().Name;
             AppVersion.Content = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             AppCopyright.Content = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+
+            ImageSource imageSource = Imaging.CreateBitmapSourceFromHBitmap(
+                Properties.Resources.IconPng.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+            Logo.Source = imageSource;
         }
 
         private void Github_OnClick(object sender, RoutedEventArgs e)

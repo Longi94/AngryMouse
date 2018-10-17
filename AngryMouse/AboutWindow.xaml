@@ -18,9 +18,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Name="AppName" FontSize="24" HorizontalAlignment="Center" />
-        <Label Grid.Row="1" Name="AppVersion" HorizontalAlignment="Center" />
-        <Label Grid.Row="2" Name="AppCopyright" HorizontalAlignment="Center" />
-        <Button Grid.Row="3" Content="Github" Click="Github_OnClick"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="1" Grid.Row="0" Name="AppName" FontSize="24" HorizontalAlignment="Center" />
+        <Label Grid.Column="1" Grid.Row="1" Name="AppVersion" HorizontalAlignment="Center" />
+        <Label Grid.Column="1" Grid.Row="2" Name="AppCopyright" HorizontalAlignment="Center" />
+        <Button Grid.Column="1" Grid.Row="3" Content="Github" Click="Github_OnClick"/>
+        <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Name="Logo" Width="100" Height="100" />
     </Grid>
 </Window>
