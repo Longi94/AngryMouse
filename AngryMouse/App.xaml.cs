@@ -53,7 +53,8 @@ namespace AngryMouse
             _notifyIcon = new NotifyIcon
             {
                 Visible = true,
-                Icon = AngryMouse.Properties.Resources.icon
+                Icon = AngryMouse.Properties.Resources.icon,
+                Text = "AngryMouse"
             };
 
             CreateContextMenu();
