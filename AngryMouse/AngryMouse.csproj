@@ -138,6 +138,10 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Startup\RunOnStartup.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\Options.cs" />
     <Compile Include="Util\WindowUtil.cs" />
     <Compile Include="App.xaml.cs">

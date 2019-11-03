@@ -1,6 +1,7 @@
 ﻿using AngryMouse.Mouse;
 using AngryMouse.Screen;
 using AngryMouse.Util;
+using AngryMouse.Startup;
 using CommandLine;
 using System.Collections.Generic;
 using System.Windows;
@@ -114,7 +115,30 @@ namespace AngryMouse
                     _aboutWindow.Closed += (sender, args) => { _aboutWindow = null; };
                 }
             };
+            
+            menu.Items.Add("Run at Windows startup").Click += (s, e) =>
+            {
+                ToolStripMenuItem runStartup = (ToolStripMenuItem)s;
+                runStartup.Checked = !runStartup.Checked;
+                if (runStartup.Checked)
+                {
+                    RunOnStartup.setRunOnStartup(true);
+                }
+                else
+                {
+                    RunOnStartup.setRunOnStartup(false);
+                }
+            };
+            foreach(ToolStripItem item in menu.Items)
+            {
+                if (item.Text.Equals("Run when Windows Startup")) 
+                {
+                    ((ToolStripMenuItem)item).Checked = RunOnStartup.isRunOnStartup();
+                }
+            }
+            
             menu.Items.Add(new ToolStripSeparator());
+            
             menu.Items.Add("Exit").Click += (s, e) => ExitApp();
 
             _notifyIcon.ContextMenuStrip = menu;
