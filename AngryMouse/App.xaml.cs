@@ -115,12 +115,12 @@ namespace AngryMouse
                     _aboutWindow.Closed += (sender, args) => { _aboutWindow = null; };
                 }
             };
-            
-            menu.Items.Add("Run at Windows startup").Click += (s, e) =>
+            var startUpItem = new ToolStripMenuItem("Run at Windows startup");
+            startUpItem.Checked = RunOnStartup.isRunOnStartup();
+            startUpItem.Click += (s, e) =>
             {
-                ToolStripMenuItem runStartup = (ToolStripMenuItem)s;
-                runStartup.Checked = !runStartup.Checked;
-                if (runStartup.Checked)
+                startUpItem.Checked = !startUpItem.Checked;
+                if (startUpItem.Checked)
                 {
                     RunOnStartup.setRunOnStartup(true);
                 }
@@ -129,14 +129,7 @@ namespace AngryMouse
                     RunOnStartup.setRunOnStartup(false);
                 }
             };
-            foreach(ToolStripItem item in menu.Items)
-            {
-                if (item.Text.Equals("Run when Windows Startup")) 
-                {
-                    ((ToolStripMenuItem)item).Checked = RunOnStartup.isRunOnStartup();
-                }
-            }
-            
+            menu.Items.Add(startUpItem);
             menu.Items.Add(new ToolStripSeparator());
             
             menu.Items.Add("Exit").Click += (s, e) => ExitApp();
