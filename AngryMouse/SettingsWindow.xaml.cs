@@ -23,8 +23,21 @@ namespace AngryMouse
             SizeSlider.ValueChanged += SizeSlider_OnValueChanged;
             AnimationLengthSlider.Value = Properties.Settings.Default.CursorAnimationLength;
             AnimationLengthSlider.ValueChanged += AnimationLengthSlider_OnValueChanged;
+            AngryCheckBox.IsChecked = Properties.Settings.Default.Angry;
+            AngryCheckBox.Checked += (o, args) => {
+                AngryCheckBox_OnValueChanged(true);
+            };
+            AngryCheckBox.Unchecked += (o, args) => {
+                AngryCheckBox_OnValueChanged(false);
+            };
         }
 
+        private void AngryCheckBox_OnValueChanged(bool value) {
+            Properties.Settings.Default.Angry = value;
+            Properties.Settings.Default.Save();
+        }
+        
+        
         private void SizeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Properties.Settings.Default.CursorSize = e.NewValue;

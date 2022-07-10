@@ -20,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Size" Margin="2" />
@@ -52,6 +53,17 @@
             TickPlacement="BottomRight"
             Margin="2" />
         <Label Grid.Column="2" Grid.Row="1"
-               Content="{Binding ElementName=AnimationLengthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+               Content="{Binding ElementName=AnimationLengthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"
+               Margin="2" />
+
+        <Label Grid.Column="0" Grid.Row="2" Content="Angry" Margin="2" />
+        <CheckBox
+            Grid.Column="1"
+            Grid.Row="2"
+            Name="AngryCheckBox"
+            Width="200"
+            VerticalAlignment="Center"
+            Margin="2"> 
+        </CheckBox>
     </Grid>
 </Window>
