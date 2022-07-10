@@ -18,22 +18,58 @@
         Loaded="Window_Loaded"
         Closed="Window_Closed">
     <Grid Name="Root">
-        <Label	
-            Name="DebugInfo"	
-            Content=""	
-            Background="Black"	
-            Foreground="White"	
-            HorizontalAlignment="Right"	
-            VerticalAlignment="Bottom"	
+        <Label
+            Name="DebugInfo"
+            Content=""
+            Background="Black"
+            Foreground="White"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
             Margin="0,0,0,0" />
         <Viewbox Name="Viewbox">
             <Canvas Name="OverlayCanvas">
                 <Path Name="BigCursor" Fill="#FFFFFFFF" Stroke="Black" StrokeThickness="10">
                     <Path.Data>
-                        <PathGeometry Figures="M 0,0 164,164 H 93.2 L 123,237 82.4,254 52,181 0,233 Z" FillRule="NonZero"/>
+                        <PathGeometry Figures="M 0 0 164 164 H 93.2 L 123 237 82.4 254 52 181 0 233 Z"
+                                      FillRule="NonZero" />
                     </Path.Data>
                 </Path>
-                <Rectangle Name="MousePosDebug" Width="20" Height="20" Fill="Green"/>
+                <Canvas Name="Angry">
+                    <Canvas>
+                        <Canvas.RenderTransform>
+                            <MatrixTransform Matrix="0.832 0 0 0.832 -90 20"/>
+                        </Canvas.RenderTransform>
+                        <Path Fill="#FFFF0000" Stroke="Black" StrokeThickness="6">
+                            <Path.Data>
+                                <PathGeometry
+                                    Figures="m 227 0 c 0 0 1 22.6 8 29.5 7 6.8 30 8.4 30 8.4 v 16.2 c 0 0 -34 -1.8 -43 -11.2 C 212 33.5 211 0 211 0 Z"
+                                    FillRule="NonZero" />
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="#FFFF0000" Stroke="Black" StrokeThickness="6">
+                            <Path.Data>
+                                <PathGeometry
+                                    Figures="m 183 0 c 0 0 -1 22.6 -8 29.5 -7 6.8 -30 8.4 -30 8.4 v 16.2 c 0 0 34 -1.8 43 -11.2 C 198 33.5 199 0 199 0 Z"
+                                    FillRule="NonZero" />
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="#FFFF0000" Stroke="Black" StrokeThickness="6">
+                            <Path.Data>
+                                <PathGeometry
+                                    Figures="m 227 120 c 0 0 1 -22.5 8 -29.4 7 -6.8 30 -8.4 30 -8.4 V 66 c 0 0 -34 1.8 -43 11.2 -10 9.4 -11 42.8 -11 42.8 z"
+                                    FillRule="NonZero" />
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="#FFFF0000" Stroke="Black" StrokeThickness="6">
+                            <Path.Data>
+                                <PathGeometry
+                                    Figures="m 183 120 c 0 0 -1 -22.7 -8 -29.6 C 168 83.6 145 82 145 82 V 65.8 c 0 0 34 1.8 43 11.2 10 9.4 11 43 11 43 z"
+                                    FillRule="NonZero" />
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                </Canvas>
+                <Rectangle Name="MousePosDebug" Width="20" Height="20" Fill="Green" />
             </Canvas>
         </Viewbox>
     </Grid>
